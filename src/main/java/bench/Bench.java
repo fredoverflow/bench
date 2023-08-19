@@ -4,36 +4,39 @@ import org.openjdk.jmh.annotations.*;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
 
 @BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.MICROSECONDS)
+@OutputTimeUnit(TimeUnit.NANOSECONDS)
 @Warmup(iterations = 2, time = 1, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 10, time = 1, timeUnit = TimeUnit.SECONDS)
 @Fork(1)
 @State(Scope.Benchmark)
 public class Bench {
+    @Param("DE12345678901234567890")
+    private String kompakt;
+
     @Benchmark
-    public String replace_Char() {
-        return "The quick brown fox jumps over the lazy dog".replace(' ', ';');
+    public String substring() {
+        String kompakt = this.kompakt;
+        return kompakt.substring(0, 4) + ' ' +
+                kompakt.substring(4, 8) + ' ' +
+                kompakt.substring(8, 12) + ' ' +
+                kompakt.substring(12, 16) + ' ' +
+                kompakt.substring(16, 20) + ' ' +
+                kompakt.substring(20, 22);
     }
 
     @Benchmark
-    public String replace_String() {
-        return "The quick brown fox jumps over the lazy dog".replace(" ", ";");
+    public String charAt() {
+        String kompakt = this.kompakt;
+        return "" +
+                kompakt.charAt(0) + kompakt.charAt(1) + kompakt.charAt(2) + kompakt.charAt(3) + ' ' +
+                kompakt.charAt(4) + kompakt.charAt(5) + kompakt.charAt(6) + kompakt.charAt(7) + ' ' +
+                kompakt.charAt(8) + kompakt.charAt(9) + kompakt.charAt(10) + kompakt.charAt(11) + ' ' +
+                kompakt.charAt(12) + kompakt.charAt(13) + kompakt.charAt(14) + kompakt.charAt(15) + ' ' +
+                kompakt.charAt(16) + kompakt.charAt(17) + kompakt.charAt(18) + kompakt.charAt(19) + ' ' +
+                kompakt.charAt(20) + kompakt.charAt(21);
     }
-
-    @Benchmark
-    public String replaceAll() {
-        return "The quick brown fox jumps over the lazy dog".replaceAll(" ", ";");
-    }
-
-    @Benchmark
-    public String replaceAll_PreCompiled() {
-        return SPACE.matcher("The quick brown fox jumps over the lazy dog").replaceAll(";");
-    }
-
-    private static final Pattern SPACE = Pattern.compile(" ");
 
     public static void main(String[] args) throws IOException {
         org.openjdk.jmh.Main.main(args);
